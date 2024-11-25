@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">AppReceitas</string>
+    <string name="email">Email</string>
+    <string name="senha">Senha</string>
+    <string name="exemplo_gmail_com">exemplo@gmail.com</string>
+    <string name="confirmar">CONFIRMAR</string>
+</resources>
