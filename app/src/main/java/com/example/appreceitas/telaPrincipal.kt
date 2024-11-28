@@ -8,6 +8,7 @@ import android.widget.SearchView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -102,40 +103,45 @@ class TelaPrincipal : AppCompatActivity() {
         // Observe recipes
         firebaseManager.getRecipesRealtime { recipes ->
             Log.d("TelaPrincipal", "Receitas carregadas: ${recipes.size}")
-            adapter.updateRecipes(recipes)
+            runOnUiThread {
+                adapter.updateRecipes(recipes)
+                if (recipes.isEmpty()) {
+                    Toast.makeText(this, "Nenhuma receita encontrada", Toast.LENGTH_SHORT).show()
+                }
+            }
         }
     }
 
+    // Na sua Activity ou ViewModel
     private fun updateRecipeInDatabase(recipe: RecipeModel) {
-        CoroutineScope(Dispatchers.IO).launch {
+        lifecycleScope.launch {
             try {
                 val success = firebaseManager.updateRecipe(recipe)
                 if (success) {
-                    runOnUiThread {
-                        Toast.makeText(
-                            this@TelaPrincipal,
-                            if (recipe.isFavorite) "Adicionado aos favoritos" else "Removido dos favoritos",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    }
-                } else {
-                    runOnUiThread {
-                        Toast.makeText(
-                            this@TelaPrincipal,
-                            "Erro ao atualizar favorito",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    }
-                }
-            } catch (e: Exception) {
-                Log.e("TelaPrincipal", "Erro ao atualizar receita", e)
-                runOnUiThread {
                     Toast.makeText(
                         this@TelaPrincipal,
-                        "Erro ao atualizar receita: ${e.message}",
+                        if (recipe.isFavorite) "Adicionado aos favoritos" else "Removido dos favoritos",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    // Atualizar a lista local de receitas
+                    val updatedRecipes = adapter.recipes.map {
+                        if (it.id == recipe.id) recipe else it
+                    }
+                    adapter.updateRecipes(updatedRecipes)
+                } else {
+                    Toast.makeText(
+                        this@TelaPrincipal,
+                        "Erro ao atualizar favorito",
                         Toast.LENGTH_SHORT
                     ).show()
                 }
+            } catch (e: Exception) {
+                Log.e("TelaPrincipal", "Erro ao atualizar receita", e)
+                Toast.makeText(
+                    this@TelaPrincipal,
+                    "Erro ao atualizar favorito: ${e.message}",
+                    Toast.LENGTH_SHORT
+                ).show()
             }
         }
     }

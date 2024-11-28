@@ -1,6 +1,7 @@
 package com.example.appreceitas
 
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
@@ -58,9 +59,11 @@ class AddRecipeActivity : AppCompatActivity() {
         lifecycleScope.launch {
             val success = firebaseManager.saveRecipe(newRecipe)
             if (success) {
+                Log.d("AddRecipeActivity", "Recipe saved successfully")
                 Toast.makeText(this@AddRecipeActivity, "Receita salva com sucesso!", Toast.LENGTH_SHORT).show()
                 finish()
             } else {
+                Log.e("AddRecipeActivity", "Failed to save recipe")
                 Toast.makeText(this@AddRecipeActivity, "Erro ao salvar a receita", Toast.LENGTH_SHORT).show()
             }
         }

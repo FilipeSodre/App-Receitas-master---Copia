@@ -3,6 +3,7 @@ package com.example.appreceitas
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
@@ -30,9 +31,7 @@ class FavoritesActivity : AppCompatActivity() {
         adapter = RecipesAdapter(
             emptyList(),
             onFavoriteClick = { recipe ->
-                lifecycleScope.launch {
-                    updateRecipeInDatabase(recipe.copy(isFavorite = !recipe.isFavorite))
-                }
+                updateRecipeInDatabase(recipe.copy(isFavorite = !recipe.isFavorite))
             },
             onItemClick = { recipe ->
                 val intent = Intent(this, RecipeDetailActivity::class.java).apply {
@@ -55,23 +54,45 @@ class FavoritesActivity : AppCompatActivity() {
     private fun loadFavoriteRecipes() {
         firebaseManager.getFavoriteRecipesRealtime { recipes ->
             Log.d("FavoritesActivity", "Receitas favoritas carregadas: ${recipes.size}")
-            adapter.updateRecipes(recipes)
+            runOnUiThread {
+                adapter.updateRecipes(recipes)
+                if (recipes.isEmpty()) {
+                    Toast.makeText(this, "Nenhuma receita favorita encontrada", Toast.LENGTH_SHORT).show()
+                }
+            }
         }
     }
 
-    private suspend fun updateRecipeInDatabase(recipe: RecipeModel) {
-        val success = firebaseManager.updateRecipe(recipe)
-        if (success) {
-            Log.d("FavoritesActivity", "Receita atualizada com sucesso: ${recipe.id}")
-        } else {
-            Log.e("FavoritesActivity", "Erro ao atualizar receita: ${recipe.id}")
+    private fun updateRecipeInDatabase(recipe: RecipeModel) {
+        lifecycleScope.launch {
+            try {
+                val success = firebaseManager.updateRecipe(recipe)
+                if (success) {
+                    Toast.makeText(
+                        this@FavoritesActivity,
+                        if (recipe.isFavorite) "Adicionado aos favoritos" else "Removido dos favoritos",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                } else {
+                    Toast.makeText(
+                        this@FavoritesActivity,
+                        "Erro ao atualizar favorito",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            } catch (e: Exception) {
+                Log.e("FavoritesActivity", "Erro ao atualizar receita", e)
+                Toast.makeText(
+                    this@FavoritesActivity,
+                    "Erro ao atualizar favorito: ${e.message}",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
         }
     }
-
 
     override fun onSupportNavigateUp(): Boolean {
         onBackPressed()
         return true
     }
 }
-

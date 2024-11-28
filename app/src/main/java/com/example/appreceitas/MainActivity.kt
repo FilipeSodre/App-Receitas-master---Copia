@@ -41,21 +41,26 @@ class MainActivity : AppCompatActivity() {
                 snackbar.show()
             } else {
                 // Corrigido: passando o texto dos EditText
-                auth.signInWithEmailAndPassword(user.text.toString(), pass.text.toString()).addOnCompleteListener {autenticacao ->
-                    if (autenticacao.isSuccessful) {
-                        val snackbar = Snackbar.make(it, "Sucesso ao cadastrar", Snackbar.LENGTH_LONG)
-                        snackbar.setBackgroundTint(Color.BLUE)
-                        snackbar.show()
+                auth.signInWithEmailAndPassword(user.text.toString(), pass.text.toString())
+                    .addOnCompleteListener { autenticacao ->
+                        if (autenticacao.isSuccessful) {
+                            val snackbar =
+                                Snackbar.make(it, "Sucesso ao cadastrar", Snackbar.LENGTH_LONG)
+                            snackbar.setBackgroundTint(Color.BLUE)
+                            snackbar.show()
 
-                        val intent = Intent(applicationContext, TelaPrincipal::class.java)
-                        startActivity(intent)
+                            val intent = Intent(applicationContext, TelaPrincipal::class.java)
+                            startActivity(intent)
+                        } else {
+                            val snackbar = Snackbar.make(
+                                it,
+                                "Erro ao cadastrar usuário: ${autenticacao.exception?.message}",
+                                Snackbar.LENGTH_LONG
+                            )
+                            snackbar.setBackgroundTint(Color.RED)
+                            snackbar.show()
+                        }
                     }
-                    else{
-                        val snackbar = Snackbar.make(it, "Erro ao cadastrar usuário: ${autenticacao.exception?.message}", Snackbar.LENGTH_LONG)
-                        snackbar.setBackgroundTint(Color.RED)
-                        snackbar.show()
-                    }
-                }
             }
 
         }
@@ -66,18 +71,4 @@ class MainActivity : AppCompatActivity() {
             startActivity(intent)
         }
     }
-
-
-
-    //verifica se o usuario ja esta logado *serve para nao precisar logar toda vez que abre o app*
-//    override fun onStart() {
-//        super.onStart()
-//
-//        val usuarioAtual = FirebaseAuth.getInstance().currentUser
-//
-//        if (usuarioAtual != null){
-//            val intent = Intent(applicationContext, TelaPrincipal::class.java)
-//            startActivity(intent)
-//    }
-//    }
 }
