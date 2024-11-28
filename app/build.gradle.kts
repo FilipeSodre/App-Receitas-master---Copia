@@ -57,5 +57,9 @@ dependencies {
     implementation("com.google.firebase:firebase-analytics")
     implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4")
     implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.6.4")
+    implementation ("com.github.bumptech.glide:glide:4.12.0")
+    annotationProcessor ("com.github.bumptech.glide:compiler:4.12.0")
+    implementation ("androidx.lifecycle:lifecycle-runtime-ktx:2.6.1")
+
 
 }

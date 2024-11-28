@@ -12,7 +12,6 @@ class FireBaseManager {
 
     suspend fun saveRecipe(recipe: RecipeModel): Boolean {
         return try {
-            Log.d("FireBaseManager", "Iniciando salvamento da receita: ${recipe.title}")
             val documentReference = withContext(Dispatchers.IO) {
                 recipesCollection.add(recipe).await()
             }
@@ -20,9 +19,19 @@ class FireBaseManager {
             true
         } catch (e: Exception) {
             Log.e("FireBaseManager", "Erro ao salvar receita", e)
-            Log.e("FireBaseManager", "Mensagem de erro: ${e.message}")
-            Log.e("FireBaseManager", "Causa: ${e.cause}")
-            e.printStackTrace()
+            false
+        }
+    }
+
+    suspend fun updateRecipe(recipe: RecipeModel): Boolean {
+        return try {
+            withContext(Dispatchers.IO) {
+                recipesCollection.document(recipe.id).set(recipe).await()
+            }
+            Log.d("FireBaseManager", "Receita atualizada com sucesso. ID: ${recipe.id}")
+            true
+        } catch (e: Exception) {
+            Log.e("FireBaseManager", "Erro ao atualizar receita", e)
             false
         }
     }
@@ -42,5 +51,23 @@ class FireBaseManager {
                 onRecipesChanged(recipes)
             }
         }
+    }
+
+    fun getFavoriteRecipesRealtime(onRecipesChanged: (List<RecipeModel>) -> Unit) {
+        recipesCollection.whereEqualTo("isFavorite", true)
+            .addSnapshotListener { snapshot, e ->
+                if (e != null) {
+                    Log.e("FireBaseManager", "Erro ao escutar mudanças nos favoritos", e)
+                    return@addSnapshotListener
+                }
+
+                if (snapshot != null) {
+                    val recipes = snapshot.documents.mapNotNull { doc ->
+                        doc.toObject(RecipeModel::class.java)?.copy(id = doc.id)
+                    }
+                    Log.d("FireBaseManager", "Receitas favoritas carregadas: ${recipes.size}")
+                    onRecipesChanged(recipes)
+                }
+            }
     }
 }

@@ -5,5 +5,7 @@ data class RecipeModel(
     val title: String = "",
     val description: String = "",
     val ingredients: String = "",
-    val instructions: String = ""
+    val instructions: String = "",
+    val imageUrl: String = "",
+    var isFavorite: Boolean = false
 )
