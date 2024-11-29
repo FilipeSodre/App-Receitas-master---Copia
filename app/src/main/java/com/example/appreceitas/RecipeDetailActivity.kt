@@ -30,6 +30,7 @@ class RecipeDetailActivity : AppCompatActivity() {
         val tvIngredients: TextView = findViewById(R.id.tvIngredients)
         val tvInstructions: TextView = findViewById(R.id.tvInstructions)
 
+        // carrega a imagem da receita
         Glide.with(this)
             .load(recipeImageUrl)
             .placeholder(R.drawable.pizza_placeholder)

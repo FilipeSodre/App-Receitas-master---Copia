@@ -70,6 +70,7 @@ class MainActivity : AppCompatActivity() {
         return true
     }
 
+
     private fun loginUser() {
 
         auth.signInWithEmailAndPassword(user.text.toString(), pass.text.toString())
@@ -86,7 +87,7 @@ class MainActivity : AppCompatActivity() {
             }
     }
 
-
+    // exibe mensagem de erro ou sucesso
     private fun showMessage(message: String, isError: Boolean) {
         val snackbar = Snackbar.make(findViewById(android.R.id.content), message, Snackbar.LENGTH_LONG)
         snackbar.setBackgroundTint(if (isError) Color.RED else Color.BLUE)

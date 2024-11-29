@@ -27,6 +27,7 @@ class RecipesAdapter(
 
     override fun getItemCount() = recipes.size
 
+
     fun updateRecipes(newRecipes: List<RecipeModel>) {
         recipes = newRecipes
         notifyDataSetChanged()
@@ -42,11 +43,13 @@ class RecipesAdapter(
             tvTitle.text = recipe.title
             tvDescription.text = recipe.description
 
+            // carrega a imagem da receita usando
             Glide.with(itemView.context)
                 .load(recipe.imageUrl)
                 .placeholder(R.drawable.pizza_placeholder)
                 .into(ivRecipe)
 
+            // muda o ícone de favorito baseado no status da receita
             val favoriteIcon = if (recipe.isFavorite) R.drawable.ic_favorite_red else R.drawable.ic_favorite
             btnFavorite.setImageResource(favoriteIcon)
 

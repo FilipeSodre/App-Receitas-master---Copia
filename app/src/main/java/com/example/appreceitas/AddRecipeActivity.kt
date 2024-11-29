@@ -49,12 +49,15 @@ class AddRecipeActivity : AppCompatActivity() {
     }
 
     private fun saveRecipe() {
+
+
         val title = etTitle.text.toString().trim()
         val description = etDescription.text.toString().trim()
         val ingredients = etIngredients.text.toString().trim()
         val instructions = etInstructions.text.toString().trim()
         val imageUrl = etImageUrl.text.toString().trim()
 
+        // valida todos os campos
         if (title.isEmpty() || description.isEmpty() || ingredients.isEmpty() || instructions.isEmpty() || imageUrl.isEmpty()) {
             Toast.makeText(this, "Por favor, preencha todos os campos", Toast.LENGTH_SHORT).show()
             return
@@ -67,7 +70,7 @@ class AddRecipeActivity : AppCompatActivity() {
             instructions = instructions,
             imageUrl = imageUrl
         )
-
+        // salva a receita
         lifecycleScope.launch {
             val success = firebaseManager.saveRecipe(newRecipe)
             if (success) {

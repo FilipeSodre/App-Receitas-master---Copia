@@ -39,7 +39,6 @@ class TelaCadastro : AppCompatActivity() {
                 snackbar.setBackgroundTint(Color.RED)
                 snackbar.show()
             } else {
-                // Corrigido: passando o texto dos EditText
                 auth.createUserWithEmailAndPassword(user.text.toString(), pass.text.toString())
                     .addOnCompleteListener { cadastro ->
                         if (cadastro.isSuccessful) {
@@ -47,12 +46,9 @@ class TelaCadastro : AppCompatActivity() {
                                 Snackbar.make(view, "Sucesso ao cadastrar", Snackbar.LENGTH_LONG)
                             snackbar.setBackgroundTint(Color.BLUE)
                             snackbar.show()
-
-                            // Redirecionando para a próxima tela (TelaPrincipal)
                             val intent = Intent(applicationContext, TelaPrincipal::class.java)
                             startActivity(intent)
                         } else {
-                            // Se a criação do usuário falhar, exibe um erro
                             val snackbar = Snackbar.make(
                                 view, "Erro ao cadastrar usuário: ${cadastro.exception?.message}",
                                 Snackbar.LENGTH_LONG

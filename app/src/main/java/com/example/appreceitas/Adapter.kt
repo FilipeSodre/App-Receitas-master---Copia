@@ -8,20 +8,20 @@ import androidx.recyclerview.widget.RecyclerView
 
 class Adapter(private val itemList: List<String>) : RecyclerView.Adapter<Adapter.ItemViewHolder>() {
 
-    //Armazena as referencias(id's) dos itens
+    // guarda referencias para as views
     class ItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val title: TextView = itemView.findViewById(R.id.tvTitle)
     }
-    //Infla o layout que esta o reciclerview e cria o viewholder
+    // icria o viewholder
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.conteudo_reciclerview   , parent, false)
         return ItemViewHolder(view)
     }
-    //Vincula a referencia ao viewholder
     override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
         holder.title.text = itemList[position]
     }
 
+    // informa quantos itens tem na lista
     override fun getItemCount(): Int {
         return itemList.size
     }

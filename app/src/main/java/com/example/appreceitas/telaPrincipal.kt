@@ -24,22 +24,21 @@ class TelaPrincipal : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.tela_principal)
 
-        // Set up toolbar
         val toolbar: Toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayShowTitleEnabled(false)
 
-        // Set up RecyclerView
         recyclerView = findViewById(R.id.recyclerView)
         recyclerView.layoutManager = LinearLayoutManager(this)
 
-        // Initialize adapter with empty list and favorite click handler
         adapter = RecipesAdapter(
             emptyList(),
             onFavoriteClick = { recipe ->
                 updateRecipeInDatabase(recipe.copy(isFavorite = !recipe.isFavorite))
             },
             onItemClick = { recipe ->
+
+                // vai para a tela de detalhes da receita
                 val intent = Intent(this, RecipeDetailActivity::class.java).apply {
                     putExtra("RECIPE_ID", recipe.id)
                     putExtra("RECIPE_TITLE", recipe.title)
@@ -53,7 +52,7 @@ class TelaPrincipal : AppCompatActivity() {
         )
         recyclerView.adapter = adapter
 
-        // Set up SearchView
+        // barra de pesquisa
         val searchView: SearchView = findViewById(R.id.searchView)
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
@@ -67,18 +66,17 @@ class TelaPrincipal : AppCompatActivity() {
             }
         })
 
-        // Set up Menu button
-        val btnMenu: ImageButton = findViewById(R.id.btnMenu)
-        btnMenu.setOnClickListener {
-            Toast.makeText(this, "Menu button clicked", Toast.LENGTH_SHORT).show()
-        }
+//        // Set up Menu button
+//        val btnMenu: ImageButton = findViewById(R.id.btnMenu)
+//        btnMenu.setOnClickListener {
+//            Toast.makeText(this, "Menu button clicked", Toast.LENGTH_SHORT).show()
+//        }
 
-        // Set up Bottom Navigation
+        // botões de navegação
         val bottomNavigation: BottomNavigationView = findViewById(R.id.bottomNavigation)
         bottomNavigation.setOnNavigationItemSelectedListener { menuItem ->
             when (menuItem.itemId) {
                 R.id.navigation_home -> {
-                    // Already on home, do nothing
                     true
                 }
                 R.id.navigation_add -> {
@@ -92,14 +90,13 @@ class TelaPrincipal : AppCompatActivity() {
                     true
                 }
                 R.id.navigation_profile -> {
-                    // Implement profile screen navigation
+                    // não consegui chegar nessa parte
                     true
                 }
                 else -> false
             }
         }
 
-        // Observe recipes
         firebaseManager.getRecipesRealtime { recipes ->
             Log.d("TelaPrincipal", "Receitas carregadas: ${recipes.size}")
             runOnUiThread {
@@ -112,6 +109,7 @@ class TelaPrincipal : AppCompatActivity() {
         }
     }
 
+    // pesquisa de receitas
     private fun searchRecipes(query: String) {
         val filteredRecipes = if (query.isEmpty()) {
             allRecipes
@@ -134,7 +132,6 @@ class TelaPrincipal : AppCompatActivity() {
                         if (recipe.isFavorite) "Adicionado aos favoritos" else "Removido dos favoritos",
                         Toast.LENGTH_SHORT
                     ).show()
-                    // Atualizar a lista local de receitas
                     val updatedRecipes = allRecipes.map {
                         if (it.id == recipe.id) recipe else it
                     }

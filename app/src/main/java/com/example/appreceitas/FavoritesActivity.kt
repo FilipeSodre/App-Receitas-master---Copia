@@ -26,14 +26,16 @@ class FavoritesActivity : AppCompatActivity() {
         supportActionBar?.title = "Favoritos"
 
         recyclerView = findViewById(R.id.recyclerViewFavorites)
-        recyclerView.layoutManager = GridLayoutManager(this, 2) // 2 colunas
+        recyclerView.layoutManager = GridLayoutManager(this, 2)
 
         adapter = RecipesAdapter(
             emptyList(),
             onFavoriteClick = { recipe ->
+                // atualiza o status de favorito da receita
                 updateRecipeInDatabase(recipe.copy(isFavorite = !recipe.isFavorite))
             },
             onItemClick = { recipe ->
+                // vai para a tela de detalhes da receita
                 val intent = Intent(this, RecipeDetailActivity::class.java).apply {
                     putExtra("RECIPE_ID", recipe.id)
                     putExtra("RECIPE_TITLE", recipe.title)
@@ -56,9 +58,6 @@ class FavoritesActivity : AppCompatActivity() {
             Log.d("FavoritesActivity", "Receitas favoritas carregadas: ${recipes.size}")
             runOnUiThread {
                 adapter.updateRecipes(recipes)
-//                if (recipes.isEmpty()) {
-//                    Toast.makeText(this, "Nenhuma receita favorita encontrada", Toast.LENGTH_SHORT).show()
-//                }
             }
         }
     }
@@ -67,19 +66,19 @@ class FavoritesActivity : AppCompatActivity() {
         lifecycleScope.launch {
             try {
                 val success = firebaseManager.updateRecipe(recipe)
-                if (success) {
+//                if (success) {
+////                    Toast.makeText(
+////                        this@FavoritesActivity,
+////                        if (recipe.isFavorite) "Adicionado aos favoritos" else "Removido dos favoritos",
+////                        Toast.LENGTH_SHORT
+////                    ).show()
+//                } else {
 //                    Toast.makeText(
 //                        this@FavoritesActivity,
-//                        if (recipe.isFavorite) "Adicionado aos favoritos" else "Removido dos favoritos",
+//                        "Erro ao atualizar favorito",
 //                        Toast.LENGTH_SHORT
 //                    ).show()
-                } else {
-                    Toast.makeText(
-                        this@FavoritesActivity,
-                        "Erro ao atualizar favorito",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
+//                }
             } catch (e: Exception) {
                 Log.e("FavoritesActivity", "Erro ao atualizar receita", e)
                 Toast.makeText(
