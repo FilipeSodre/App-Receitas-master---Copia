@@ -47,31 +47,20 @@ class FireBaseManager {
     }
 
     fun getRecipesRealtime(onRecipesChanged: (List<RecipeModel>) -> Unit) {
-        recipesCollection
-            .addSnapshotListener { snapshot, e ->
-                if (e != null) {
-                    Log.e("FireBaseManager", "Error fetching recipes", e)
-                    return@addSnapshotListener
-                }
-
-                if (snapshot != null) {
-                    val recipes = snapshot.documents.mapNotNull { doc ->
-                        try {
-                            val recipe = doc.toObject(RecipeModel::class.java)?.copy(id = doc.id)
-                            Log.d("FireBaseManager", "Fetched recipe: ${recipe?.title}")
-                            recipe
-                        } catch (e: Exception) {
-                            Log.e("FireBaseManager", "Error converting document", e)
-                            null
-                        }
-                    }
-                    Log.d("FireBaseManager", "Total recipes fetched: ${recipes.size}")
-                    onRecipesChanged(recipes)
-                } else {
-                    Log.d("FireBaseManager", "No recipes found")
-                    onRecipesChanged(emptyList())
-                }
+        recipesCollection.addSnapshotListener { snapshot, e ->
+            if (e != null) {
+                Log.e("FireBaseManager", "Erro ao escutar mudanças", e)
+                return@addSnapshotListener
             }
+
+            if (snapshot != null) {
+                val recipes = snapshot.documents.mapNotNull { doc ->
+                    doc.toObject(RecipeModel::class.java)?.copy(id = doc.id)
+                }
+                Log.d("FireBaseManager", "Receitas carregadas: ${recipes.size}")
+                onRecipesChanged(recipes)
+            }
+        }
     }
 
     fun getFavoriteRecipesRealtime(onRecipesChanged: (List<RecipeModel>) -> Unit) {
@@ -91,4 +80,24 @@ class FireBaseManager {
                 }
             }
     }
+
+    suspend fun searchRecipes(query: String): List<RecipeModel> {
+        return try {
+            withContext(Dispatchers.IO) {
+                val snapshot = recipesCollection
+                    .whereGreaterThanOrEqualTo("title", query)
+                    .whereLessThanOrEqualTo("title", query + '\uf8ff')
+                    .get()
+                    .await()
+
+                snapshot.documents.mapNotNull { doc ->
+                    doc.toObject(RecipeModel::class.java)?.copy(id = doc.id)
+                }
+            }
+        } catch (e: Exception) {
+            Log.e("FireBaseManager", "Erro ao pesquisar receitas", e)
+            emptyList()
+        }
+    }
 }
+

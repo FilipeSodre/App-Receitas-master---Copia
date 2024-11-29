@@ -47,7 +47,7 @@ class RecipesAdapter(
                 .placeholder(R.drawable.pizza_placeholder)
                 .into(ivRecipe)
 
-            val favoriteIcon = if (recipe.isFavorite) R.drawable.ic_favorite else R.drawable.ic_home
+            val favoriteIcon = if (recipe.isFavorite) R.drawable.ic_favorite_red else R.drawable.ic_favorite
             btnFavorite.setImageResource(favoriteIcon)
 
             btnFavorite.setOnClickListener { onFavoriteClick(recipe) }

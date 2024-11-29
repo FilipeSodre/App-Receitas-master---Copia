@@ -7,6 +7,7 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
+import com.google.android.material.appbar.MaterialToolbar
 import kotlinx.coroutines.launch
 
 class AddRecipeActivity : AppCompatActivity() {
@@ -17,12 +18,18 @@ class AddRecipeActivity : AppCompatActivity() {
     private lateinit var etInstructions: EditText
     private lateinit var etImageUrl: EditText
     private lateinit var btnSave: Button
+    private lateinit var toolbar: MaterialToolbar
 
     private val firebaseManager = FireBaseManager()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_recipe)
+
+        toolbar = findViewById(R.id.toolbar)
+        setSupportActionBar(toolbar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setDisplayShowHomeEnabled(true)
 
         etTitle = findViewById(R.id.etTitle)
         etDescription = findViewById(R.id.etDescription)
@@ -34,6 +41,11 @@ class AddRecipeActivity : AppCompatActivity() {
         btnSave.setOnClickListener {
             saveRecipe()
         }
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressed()
+        return true
     }
 
     private fun saveRecipe() {
@@ -69,3 +81,4 @@ class AddRecipeActivity : AppCompatActivity() {
         }
     }
 }
+

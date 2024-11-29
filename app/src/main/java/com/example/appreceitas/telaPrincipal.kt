@@ -12,14 +12,13 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class TelaPrincipal : AppCompatActivity() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: RecipesAdapter
     private val firebaseManager = FireBaseManager()
+    private var allRecipes: List<RecipeModel> = emptyList()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -58,12 +57,12 @@ class TelaPrincipal : AppCompatActivity() {
         val searchView: SearchView = findViewById(R.id.searchView)
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
-                // Implement search functionality here
+                query?.let { searchRecipes(it) }
                 return true
             }
 
             override fun onQueryTextChange(newText: String?): Boolean {
-                // Implement search suggestions or filtering here
+                newText?.let { searchRecipes(it) }
                 return true
             }
         })
@@ -104,6 +103,7 @@ class TelaPrincipal : AppCompatActivity() {
         firebaseManager.getRecipesRealtime { recipes ->
             Log.d("TelaPrincipal", "Receitas carregadas: ${recipes.size}")
             runOnUiThread {
+                allRecipes = recipes
                 adapter.updateRecipes(recipes)
                 if (recipes.isEmpty()) {
                     Toast.makeText(this, "Nenhuma receita encontrada", Toast.LENGTH_SHORT).show()
@@ -112,7 +112,18 @@ class TelaPrincipal : AppCompatActivity() {
         }
     }
 
-    // Na sua Activity ou ViewModel
+    private fun searchRecipes(query: String) {
+        val filteredRecipes = if (query.isEmpty()) {
+            allRecipes
+        } else {
+            allRecipes.filter { recipe ->
+                recipe.title.contains(query, ignoreCase = true) ||
+                        recipe.description.contains(query, ignoreCase = true)
+            }
+        }
+        adapter.updateRecipes(filteredRecipes)
+    }
+
     private fun updateRecipeInDatabase(recipe: RecipeModel) {
         lifecycleScope.launch {
             try {
@@ -124,9 +135,10 @@ class TelaPrincipal : AppCompatActivity() {
                         Toast.LENGTH_SHORT
                     ).show()
                     // Atualizar a lista local de receitas
-                    val updatedRecipes = adapter.recipes.map {
+                    val updatedRecipes = allRecipes.map {
                         if (it.id == recipe.id) recipe else it
                     }
+                    allRecipes = updatedRecipes
                     adapter.updateRecipes(updatedRecipes)
                 } else {
                     Toast.makeText(
@@ -146,3 +158,4 @@ class TelaPrincipal : AppCompatActivity() {
         }
     }
 }
+

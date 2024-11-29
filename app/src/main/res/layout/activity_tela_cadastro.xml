@@ -49,18 +49,19 @@
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.116"
+        app:layout_constraintHorizontal_bias="0.083"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.298" />
+        app:layout_constraintVertical_bias="0.297" />
 
     <EditText
         android:id="@+id/userEmail"
-        android:layout_width="350sp"
+        android:layout_width="380sp"
         android:layout_height="50sp"
         android:background="@android:drawable/gallery_thumb"
         android:backgroundTint="@color/black"
         android:ems="10"
+        android:hint="@string/exemplo_gmail_com"
         android:inputType="text|textEmailAddress"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -70,7 +71,7 @@
         android:id="@+id/textView8"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="30dp"
+        android:layout_marginStart="16dp"
         android:layout_marginTop="40dp"
         android:text="@string/email"
         android:textSize="16sp"
@@ -82,48 +83,58 @@
         android:id="@+id/textView9"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="30dp"
-        android:layout_marginBottom="8dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginBottom="320dp"
         android:text="@string/senha"
         android:textSize="16sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/UserPass"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/voltar" />
 
     <ImageButton
         android:id="@+id/voltar"
         android:layout_width="68dp"
-        android:layout_height="61dp"
+        android:layout_height="0dp"
         android:layout_marginStart="4dp"
         android:layout_marginTop="40dp"
+        android:layout_marginBottom="288dp"
         android:backgroundTint="#00FFFFFF"
         android:scaleType="centerInside"
+        app:layout_constraintBottom_toTopOf="@+id/textView9"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/seta_preta_esquerda" />
 
     <Button
         android:id="@+id/cadastrar"
-        android:layout_width="201dp"
-        android:layout_height="48dp"
-        android:layout_marginTop="28dp"
+        android:layout_width="380dp"
+        android:layout_height="50dp"
         android:backgroundTint="#FF0000"
-        android:text="@string/confirmar"
+        android:text="Login"
+        android:textAlignment="center"
         android:textSize="20dp"
+        app:cornerRadius="5dp"
+        app:iconTint="#FF0000"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.548"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/UserPass" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.704"
+        app:rippleColor="#FF0000" />
 
     <EditText
         android:id="@+id/UserPass"
-        android:layout_width="348dp"
-        android:layout_height="68dp"
+        android:layout_width="380dp"
+        android:layout_height="50dp"
         android:layout_marginTop="44dp"
         android:background="@android:drawable/gallery_thumb"
         android:backgroundTint="@color/black"
         android:ems="10"
         android:inputType="textPassword"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.516"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/userEmail" />
 

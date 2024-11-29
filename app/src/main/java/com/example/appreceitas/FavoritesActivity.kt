@@ -56,9 +56,9 @@ class FavoritesActivity : AppCompatActivity() {
             Log.d("FavoritesActivity", "Receitas favoritas carregadas: ${recipes.size}")
             runOnUiThread {
                 adapter.updateRecipes(recipes)
-                if (recipes.isEmpty()) {
-                    Toast.makeText(this, "Nenhuma receita favorita encontrada", Toast.LENGTH_SHORT).show()
-                }
+//                if (recipes.isEmpty()) {
+//                    Toast.makeText(this, "Nenhuma receita favorita encontrada", Toast.LENGTH_SHORT).show()
+//                }
             }
         }
     }
@@ -68,11 +68,11 @@ class FavoritesActivity : AppCompatActivity() {
             try {
                 val success = firebaseManager.updateRecipe(recipe)
                 if (success) {
-                    Toast.makeText(
-                        this@FavoritesActivity,
-                        if (recipe.isFavorite) "Adicionado aos favoritos" else "Removido dos favoritos",
-                        Toast.LENGTH_SHORT
-                    ).show()
+//                    Toast.makeText(
+//                        this@FavoritesActivity,
+//                        if (recipe.isFavorite) "Adicionado aos favoritos" else "Removido dos favoritos",
+//                        Toast.LENGTH_SHORT
+//                    ).show()
                 } else {
                     Toast.makeText(
                         this@FavoritesActivity,
