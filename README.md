@@ -36,7 +36,6 @@ HungryApp é um aplicativo Android de receitas que permite aos usuários visuali
 - Home: Tela principal com todas as receitas
 - Adicionar: Adiciona uma nova receita
 - Favoritos: Mostra suas receitas favoritas
-- Perfil: (Funcionalidade a ser implementada)
 
 ### Adicionar uma Receita
 
